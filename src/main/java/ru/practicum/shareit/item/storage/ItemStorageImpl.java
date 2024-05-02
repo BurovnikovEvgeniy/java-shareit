@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.entity.EntityNotFoundException;
-import ru.practicum.shareit.exception.entity.NotValidDataException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;

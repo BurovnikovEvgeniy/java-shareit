@@ -3,11 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.request.model.ItemRequest;
 
-/**
- * TODO Sprint add-controllers.
- */
 @AllArgsConstructor
 @Getter
 @Setter
