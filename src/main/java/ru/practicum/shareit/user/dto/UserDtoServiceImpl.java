@@ -53,8 +53,7 @@ public class UserDtoServiceImpl implements UserDtoService {
                 userWithOldData.setEmail(oldUser.getEmail());
             }
             return UserMapper.toUserDto(userStorage.update(id, UserMapper.toUser(userWithOldData)));
-        }
-        else {
+        } else {
             return UserMapper.toUserDto(userStorage.update(id, UserMapper.toUser(userDto)));
         }
     }

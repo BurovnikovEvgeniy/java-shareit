@@ -73,8 +73,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
                 itemWithOldData.setAvailable(oldItem.getAvailable());
             }
             resItem = ItemMapper.toItem(itemWithOldData);
-        }
-        else {
+        } else {
             resItem = ItemMapper.toItem(itemDto);
         }
         resItem.setOwner(userId);
