@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -8,9 +9,11 @@ import ru.practicum.shareit.exception.entity.EntityNotFoundException;
 import ru.practicum.shareit.exception.entity.NotUniqueEmailException;
 import ru.practicum.shareit.exception.entity.NotValidDataException;
 
+import javax.validation.ValidationException;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class ErrorHandler {
 
     @ExceptionHandler
@@ -28,6 +31,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleNotValidEmailException(final NotValidDataException e) {
+        return Map.of("message", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleNotValidEmailException(final ValidationException e) {
+        log.error("Произошла ошибка валидации параметров");
         return Map.of("message", e.getMessage());
     }
 }

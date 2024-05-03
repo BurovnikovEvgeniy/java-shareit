@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,11 +62,10 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public List<Item> findAllByUserId(long userId) {
-        if (!itemMap.containsKey(userId)) {
+        return new ArrayList<>(Optional.ofNullable(itemMap.get(userId)).orElseThrow(() -> {
             log.error("Вещи пользователя с id=" + userId + " не найдены в базе");
             throw new EntityNotFoundException("Вещи пользователя с id=" + userId + " не найдены в базе");
-        }
-        return new ArrayList<>(itemMap.get(userId));
+        }));
     }
 
     @Override

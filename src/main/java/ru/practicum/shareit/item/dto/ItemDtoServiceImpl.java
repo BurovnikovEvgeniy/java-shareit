@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.entity.NotValidDataException;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
@@ -17,34 +17,15 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@Validated
+@RequiredArgsConstructor
 public class ItemDtoServiceImpl implements ItemDtoService {
+
     private final ItemStorage itemStorage;
     private final UserDtoService userDtoService;
 
-    @Autowired
-    public ItemDtoServiceImpl(ItemStorage itemStorage, UserDtoService userDtoService) {
-        this.itemStorage = itemStorage;
-        this.userDtoService = userDtoService;
-    }
-
     @Override
     public ItemDto add(Long userId, ItemDto itemDto) {
-        if (itemDto == null) {
-            log.error("Введенное itemDto равно null");
-            throw new NotValidDataException("Введенное itemDto равно null");
-        }
-        if (itemDto.getName() == null || itemDto.getName().isBlank()) {
-            log.error("Введенное значение имени для вещи некорректно");
-            throw new NotValidDataException("Введенное значение имени для вещи некорректно");
-        }
-        if (itemDto.getDescription() == null || itemDto.getDescription().isBlank()) {
-            log.error("Введенное значение описания для вещи некорректно");
-            throw new NotValidDataException("Введенное значение описания для вещи некорректно");
-        }
-        if (itemDto.getAvailable() == null) {
-            log.error("Введенное значение доступности для вещи некорректно");
-            throw new NotValidDataException("Введенное значение доступности для вещи некорректно");
-        }
         UserDto user = userDtoService.findById(userId);
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner((UserMapper.toUser(user)).getId());
@@ -53,10 +34,6 @@ public class ItemDtoServiceImpl implements ItemDtoService {
 
     @Override
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
-        if (itemDto == null) {
-            log.error("Введенное itemDto равно null");
-            throw new NotValidDataException("Введенное itemDto равно null");
-        }
         UserDto ownerDto = userDtoService.findById(userId);
         Item resItem;
         if (itemDto.getName() == null || itemDto.getDescription() == null || itemDto.getAvailable() == null) {
@@ -83,10 +60,6 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     @Override
     public ItemDto findById(Long userId, Long itemId) {
         userDtoService.findById(userId);
-        if (itemId == null || itemId < 0) {
-            log.error("Заданное id вещи для поиска по id не валидно (id=" + itemId + ")");
-            throw new NotValidDataException("Заданное id вещи для поиска по id не валидно (id=" + itemId + ")");
-        }
         Item item = itemStorage.findById(itemId);
         return ItemMapper.toItemDto(item);
     }

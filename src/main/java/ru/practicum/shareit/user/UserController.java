@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,34 +13,35 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserDtoService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
+@RequiredArgsConstructor
 @RestController
+@Validated
 @RequestMapping(path = "/users")
 public class UserController {
 
     private final UserDtoService userDtoService;
 
-    @Autowired
-    public UserController(UserDtoService userDtoService) {
-        this.userDtoService = userDtoService;
-    }
-
     @PostMapping
-    public UserDto add(@RequestBody UserDto userDto) {
+    public UserDto add(@Valid @NotNull @RequestBody UserDto userDto) {
         return userDtoService.add(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@PathVariable Long userId, @RequestBody UserDto userDto) {
+    public UserDto update(@PositiveOrZero @PathVariable Long userId,
+                          @NotNull @RequestBody UserDto userDto) {
         return userDtoService.update(userId, userDto);
     }
 
     @GetMapping("/{userId}")
-    public UserDto findById(@PathVariable Long userId) {
+    public UserDto findById(@PositiveOrZero @PathVariable Long userId) {
         return userDtoService.findById(userId);
     }
 
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void delete(@PathVariable Long userId) {
+    public void delete(@PositiveOrZero @PathVariable Long userId) {
         userDtoService.delete(userId);
     }
 }

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -51,11 +52,10 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public User findById(Long id) {
-        if (!userMap.containsKey(id)) {
+        return Optional.ofNullable(userMap.get(id)).orElseThrow(() -> {
             log.error("Пользователь с id=" + id + " не найден");
             throw new EntityNotFoundException("Пользователь с id=" + id + " не найден");
-        }
-        return userMap.get(id);
+        });
     }
 
     @Override
