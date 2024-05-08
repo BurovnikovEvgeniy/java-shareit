@@ -48,7 +48,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
     @Override
     @Transactional
     public BookingDtoOut update(Long userId, Long bookingId, Boolean approved) {
-        Booking booking = validateBookingDetails(userId, bookingId, 1);
+        Booking booking = validateOwnBookingDetails(userId, bookingId);
         BookingStatus newStatus = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
         booking.setStatus(newStatus);
         return BookingMapper.toBookingOut(bookingRepository.save(booking));
@@ -57,8 +57,15 @@ public class BookingDtoServiceImpl implements BookingDtoService {
     @Override
     @Transactional
     public BookingDtoOut findBookingByUserId(Long userId, Long bookingId) {
-        Booking booking = validateBookingDetails(userId, bookingId, 2);
-        assert booking != null;
+        Optional<Booking> bookingById = bookingRepository.findById(bookingId);
+        if (bookingById.isEmpty()) {
+            throw new EntityNotFoundException("Бронь не найдена.");
+        }
+        Booking booking = bookingById.get();
+        if (!Objects.equals(booking.getBooker().getId(), userId)
+                && !Objects.equals(booking.getItem().getOwner().getId(), (userId))) {
+            throw new EntityNotFoundException("Пользователь не владелец вещи и не автор бронирования");
+        }
         return BookingMapper.toBookingOut(booking);
     }
 
@@ -159,29 +166,18 @@ public class BookingDtoServiceImpl implements BookingDtoService {
         return state;
     }
 
-    private Booking validateBookingDetails(Long userId, Long bookingId, Integer number) {
+    private Booking validateOwnBookingDetails(Long userId, Long bookingId) {
         Optional<Booking> bookingById = bookingRepository.findById(bookingId);
         if (bookingById.isEmpty()) {
             throw new EntityNotFoundException("Бронь не найдена.");
         }
         Booking booking = bookingById.get();
-        switch (number) {
-            case 1:
-                if (!Objects.equals(booking.getItem().getOwner().getId(), userId)) {
-                    throw new EntityNotFoundException("Пользователь не является владельцем");
-                }
-                if (!booking.getStatus().equals(BookingStatus.WAITING)) {
-                    throw new NotValidDataException("Бронь cо статусом WAITING");
-                }
-                return booking;
-            case 2:
-                if (!Objects.equals(booking.getBooker().getId(), userId)
-                        && !Objects.equals(booking.getItem().getOwner().getId(), (userId))) {
-                    throw new EntityNotFoundException("Пользователь не владелец вещи и не автор бронирования");
-                }
-                return booking;
-            default:
-                throw new IllegalArgumentException("Неверное использование валидации бронирования");
+        if (!Objects.equals(booking.getItem().getOwner().getId(), userId)) {
+            throw new EntityNotFoundException("Пользователь не является владельцем");
         }
+        if (!booking.getStatus().equals(BookingStatus.WAITING)) {
+            throw new NotValidDataException("Бронь cо статусом WAITING");
+        }
+        return booking;
     }
 }
