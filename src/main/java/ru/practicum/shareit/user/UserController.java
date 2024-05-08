@@ -12,15 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserDtoService;
+import ru.practicum.shareit.user.validated.group.CreateUserValidation;
+import ru.practicum.shareit.user.validated.group.UpdateUserValidation;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RequiredArgsConstructor
 @RestController
 @Validated
@@ -30,13 +28,13 @@ public class UserController {
     private final UserDtoService userDtoService;
 
     @PostMapping
-    public UserDto add(@Valid @NotNull @RequestBody UserDto userDto) {
+    public UserDto add(@Validated(value = {CreateUserValidation.class}) @NotNull @RequestBody UserDto userDto) {
         return userDtoService.add(userDto);
     }
 
     @PatchMapping("/{userId}")
     public UserDto update(@PositiveOrZero @PathVariable Long userId,
-                          @NotNull @RequestBody UserDto userDto) {
+                          @Validated(value = {UpdateUserValidation.class}) @NotNull @RequestBody UserDto userDto) {
         return userDtoService.update(userId, userDto);
     }
 
