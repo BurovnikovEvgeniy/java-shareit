@@ -5,12 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.entity.EntityNotFoundException;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.user.UserMapper.userMapper;
 
 @Service
 @Slf4j
@@ -22,8 +23,8 @@ public class UserDtoServiceImpl implements UserDtoService {
     @Override
     @Transactional
     public UserDto add(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        return UserMapper.toUserDto(userStorage.save(user));
+        User user = userMapper.toUser(userDto);
+        return userMapper.toUserDto(userStorage.save(user));
     }
 
     @Override
@@ -37,13 +38,13 @@ public class UserDtoServiceImpl implements UserDtoService {
         if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
             user.setEmail(userDto.getEmail());
         }
-        return UserMapper.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
-        return UserMapper.toUserDto(userStorage.findById(id)
+        return userMapper.toUserDto(userStorage.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователя с " + id + " не существует"))
         );
     }
@@ -58,7 +59,7 @@ public class UserDtoServiceImpl implements UserDtoService {
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userStorage.findAll()
-                .stream().map(UserMapper::toUserDto)
+                .stream().map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 }

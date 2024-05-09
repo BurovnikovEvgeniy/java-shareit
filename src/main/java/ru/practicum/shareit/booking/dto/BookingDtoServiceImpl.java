@@ -23,6 +23,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareit.booking.BookingMapper.bookingMapper;
+import static ru.practicum.shareit.user.UserMapper.userMapper;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +37,15 @@ public class BookingDtoServiceImpl implements BookingDtoService {
     @Override
     @Transactional
     public BookingDtoOut add(Long userId, BookingDto bookingDto) {
-        User user = UserMapper.toUser(userService.findById(userId));
+        User user = userMapper.toUser(userService.findById(userId));
         Optional<Item> itemById = itemRepository.findById(bookingDto.getItemId());
         if (itemById.isEmpty()) {
             throw new EntityNotFoundException("Вещь не найдена.");
         }
         Item item = itemById.get();
         bookingValidation(bookingDto, user, item);
-        Booking booking = BookingMapper.toBooking(user, item, bookingDto);
-        return BookingMapper.toBookingOut(bookingRepository.save(booking));
+        Booking booking = bookingMapper.toBooking(user, item, bookingDto);
+        return bookingMapper.toBookingOut(bookingRepository.save(booking));
     }
 
     @Override
@@ -51,7 +54,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
         Booking booking = validateOwnBookingDetails(userId, bookingId);
         BookingStatus newStatus = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
         booking.setStatus(newStatus);
-        return BookingMapper.toBookingOut(bookingRepository.save(booking));
+        return bookingMapper.toBookingOut(bookingRepository.save(booking));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
                 && !Objects.equals(booking.getItem().getOwner().getId(), (userId))) {
             throw new EntityNotFoundException("Пользователь не владелец вещи и не автор бронирования");
         }
-        return BookingMapper.toBookingOut(booking);
+        return bookingMapper.toBookingOut(booking);
     }
 
     @Override
@@ -76,31 +79,31 @@ public class BookingDtoServiceImpl implements BookingDtoService {
         switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByBookerId(bookerId).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             case CURRENT:
                 return bookingRepository.findAllCurrentBookingsByBookerId(bookerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case PAST:
                 return bookingRepository.findAllPastBookingsByBookerId(bookerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case FUTURE:
                 return bookingRepository.findAllFutureBookingsByBookerId(bookerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case WAITING:
                 return bookingRepository.findAllWaitingBookingsByBookerId(bookerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case REJECTED:
                 return bookingRepository.findAllRejectedBookingsByBookerId(bookerId).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             default:
                 throw new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS");
@@ -114,31 +117,31 @@ public class BookingDtoServiceImpl implements BookingDtoService {
         switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByOwnerId(ownerId).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             case CURRENT:
                 return bookingRepository.findAllCurrentBookingsByOwnerId(ownerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case PAST:
                 return bookingRepository.findAllPastBookingsByOwnerId(ownerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case FUTURE:
                 return bookingRepository.findAllFutureBookingsByOwnerId(ownerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case WAITING:
                 return bookingRepository.findAllWaitingBookingsByOwnerId(ownerId, LocalDateTime.now()).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
 
             case REJECTED:
                 return bookingRepository.findAllRejectedBookingsByOwnerId(ownerId).stream()
-                        .map(BookingMapper::toBookingOut)
+                        .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             default:
                 throw new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS");

@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static ru.practicum.shareit.booking.BookingMapper.bookingMapper;
+import static ru.practicum.shareit.user.UserMapper.userMapper;
 
 @Service
 @Slf4j
@@ -50,7 +52,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     public ItemDtoOut add(Long userId, ItemDto itemDto) {
         UserDto user = userDtoService.findById(userId);
         Item item = ItemMapper.toItem(itemDto);
-        item.setOwner((UserMapper.toUser(user)));
+        item.setOwner((userMapper.toUser(user)));
         return ItemMapper.toItemDtoOut(itemStorage.save(item));
     }
 
@@ -89,7 +91,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
         List<Booking> bookings = bookingStorage.findAllByItemAndStatusOrderByStartAsc(item, BookingStatus.APPROVED);
         List<BookingDtoOut> bookingDTOList = bookings
                 .stream()
-                .map(BookingMapper::toBookingOut)
+                .map(bookingMapper::toBookingOut)
                 .collect(toList());
 
         itemDtoOut.setLastBooking(getLastBooking(bookingDTOList, LocalDateTime.now()));
@@ -111,7 +113,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
         Map<Long, List<BookingDtoOut>> bookings = bookingStorage.findAllByItemInAndStatusOrderByStartAsc(itemList,
                         BookingStatus.APPROVED)
                 .stream()
-                .map(BookingMapper::toBookingOut)
+                .map(bookingMapper::toBookingOut)
                 .collect(groupingBy(BookingDtoOut::getItemId, toList()));
         return itemList.stream()
                 .map(item -> ItemMapper.toItemDtoOut(
@@ -138,7 +140,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     @Override
     @Transactional
     public CommentDtoOut createComment(Long userId, CommentDto commentDto, Long itemId) {
-        User user = UserMapper.toUser(userDtoService.findById(userId));
+        User user = userMapper.toUser(userDtoService.findById(userId));
         Optional<Item> itemById = itemStorage.findById(itemId);
 
         if (itemById.isEmpty()) {
