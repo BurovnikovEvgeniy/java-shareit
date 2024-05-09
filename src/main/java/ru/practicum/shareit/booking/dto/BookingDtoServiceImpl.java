@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking.dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -13,7 +12,6 @@ import ru.practicum.shareit.exception.entity.NotValidDataException;
 import ru.practicum.shareit.exception.entity.UnsupportedStatusException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDtoService;
 import ru.practicum.shareit.user.model.User;
 

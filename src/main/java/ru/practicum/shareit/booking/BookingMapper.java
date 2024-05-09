@@ -16,13 +16,13 @@ public interface BookingMapper {
     BookingMapper bookingMapper = Mappers.getMapper(BookingMapper.class);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "item", source="item")
-    @Mapping(target = "booker", source="user")
-    @Mapping(target = "status", constant="WAITING")
+    @Mapping(target = "item", source = "item")
+    @Mapping(target = "booker", source = "user")
+    @Mapping(target = "status", constant = "WAITING")
     Booking toBooking(User user, Item item, BookingDto bookingDto);
 
     BookingDtoOut toBookingOut(Booking booking);
 
-    @Mapping(target = "bookerId", expression="java(booking.getBooker().getId())")
+    @Mapping(target = "bookerId", expression = "java(booking.getBooker().getId())")
     BookingItemDto toBookingItemDto(Booking booking);
 }
