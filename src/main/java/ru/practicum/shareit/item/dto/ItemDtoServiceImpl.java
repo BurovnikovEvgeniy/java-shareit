@@ -12,7 +12,6 @@ import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.entity.EntityNotFoundException;
 import ru.practicum.shareit.exception.entity.NotValidDataException;
 import ru.practicum.shareit.item.CommentMapper;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
@@ -32,6 +31,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static ru.practicum.shareit.booking.BookingMapper.bookingMapper;
+import static ru.practicum.shareit.item.ItemMapper.itemMapper;
 import static ru.practicum.shareit.user.UserMapper.userMapper;
 
 @Service
@@ -49,9 +49,9 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     @Transactional
     public ItemDtoOut add(Long userId, ItemDto itemDto) {
         UserDto user = userDtoService.findById(userId);
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = itemMapper.toItem(itemDto);
         item.setOwner((userMapper.toUser(user)));
-        return ItemMapper.toItemDtoOut(itemStorage.save(item));
+        return itemMapper.toItemDtoOut(itemStorage.save(item));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
         if (itemDto.getAvailable() != null) {
             resItem.setAvailable(itemDto.getAvailable());
         }
-        return ItemMapper.toItemDtoOut(resItem);
+        return itemMapper.toItemDtoOut(resItem);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
         userDtoService.findById(userId);
         Item item = itemStorage.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("Вещи с " + itemId + " не существует"));
-        ItemDtoOut itemDtoOut = ItemMapper.toItemDtoOut(item);
+        ItemDtoOut itemDtoOut = itemMapper.toItemDtoOut(item);
         itemDtoOut.setComments(getAllItemComments(itemId));
         if (!Objects.equals(item.getOwner().getId(), (userId))) {
             return itemDtoOut;
@@ -114,7 +114,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
                 .map(bookingMapper::toBookingOut)
                 .collect(groupingBy(BookingDtoOut::getItemId, toList()));
         return itemList.stream()
-                .map(item -> ItemMapper.toItemDtoOut(
+                .map(item -> itemMapper.toItemDtoOut(
                         item,
                         getLastBooking(bookings.get(item.getId()), LocalDateTime.now()),
                         comments.get(item.getId()),
@@ -131,7 +131,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
             return new ArrayList<>();
         }
         return itemStorage.search(text)
-                .stream().map(ItemMapper::toItemDtoOut)
+                .stream().map(itemMapper::toItemDtoOut)
                 .collect(toList());
     }
 

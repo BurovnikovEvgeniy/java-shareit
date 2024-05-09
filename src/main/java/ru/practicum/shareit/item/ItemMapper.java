@@ -1,5 +1,8 @@
 package ru.practicum.shareit.item;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.item.dto.CommentDtoOut;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -8,47 +11,19 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public class ItemMapper {
+@Mapper
+public interface ItemMapper {
 
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable()
-        );
-    }
+    ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
-    public static Item toItem(ItemDto itemDto) {
-        return new Item(itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                null,
-                null
-        );
-    }
+    ItemDto toItemDto(Item item);
 
-    public static ItemDtoOut toItemDtoOut(Item item) {
-        return new ItemDtoOut(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                null,
-                null,
-                null
-        );
-    }
+    Item toItem(ItemDto itemDto);
 
-    public static ItemDtoOut toItemDtoOut(Item item, BookingDtoOut lastBooking, List<CommentDtoOut> comments, BookingDtoOut nextBooking) {
-        return new ItemDtoOut(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                lastBooking,
-                comments,
-                nextBooking
-        );
-    }
+    ItemDtoOut toItemDtoOut(Item item);
+
+    @Mapping(target = "id", expression = "java(item.getId())")
+    @Mapping(target = "lastBooking", source = "lastBooking")
+    @Mapping(target = "nextBooking", source = "nextBooking")
+    ItemDtoOut toItemDtoOut(Item item, BookingDtoOut lastBooking, List<CommentDtoOut> comments, BookingDtoOut nextBooking);
 }
