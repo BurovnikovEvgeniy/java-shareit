@@ -99,7 +99,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
                         .collect(Collectors.toList());
 
             case REJECTED:
-                return bookingRepository.findAllRejectedBookingsByBookerId(bookerId, LocalDateTime.now()).stream()
+                return bookingRepository.findAllRejectedBookingsByBookerId(bookerId).stream()
                         .map(BookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             default:

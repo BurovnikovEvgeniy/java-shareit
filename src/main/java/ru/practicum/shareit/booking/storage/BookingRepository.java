@@ -55,7 +55,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE b.booker_id = :booker_id " +
             "AND b.status = 'REJECTED' " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllRejectedBookingsByBookerId(@Param("booker_id") Long bookerId, LocalDateTime currentTime);
+    List<Booking> findAllRejectedBookingsByBookerId(@Param("booker_id") Long bookerId);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id  " +
