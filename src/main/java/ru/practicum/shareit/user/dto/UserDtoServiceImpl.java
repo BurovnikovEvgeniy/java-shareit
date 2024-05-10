@@ -3,58 +3,63 @@ package ru.practicum.shareit.user.dto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.UserMapper;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.entity.EntityNotFoundException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.user.UserMapper.userMapper;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserDtoServiceImpl implements UserDtoService {
 
-    private final UserStorage userStorage;
+    private final UserRepository userStorage;
 
     @Override
+    @Transactional
     public UserDto add(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        return UserMapper.toUserDto(userStorage.add(user));
+        User user = userMapper.toUser(userDto);
+        return userMapper.toUserDto(userStorage.save(user));
     }
 
     @Override
+    @Transactional
     public UserDto update(Long id, UserDto userDto) {
-        if (userDto.getName() == null || userDto.getEmail() == null) {
-            log.warn("Происходит частичное обновление данных пользователя с id=" + id);
-            UserDto oldUser = findById(id);
-            UserDto userWithOldData = new UserDto(id, userDto.getName(), userDto.getEmail());
-            if (userDto.getName() == null) {
-                userWithOldData.setName(oldUser.getName());
-            }
-            if (userDto.getEmail() == null) {
-                userWithOldData.setEmail(oldUser.getEmail());
-            }
-            return UserMapper.toUserDto(userStorage.update(id, UserMapper.toUser(userWithOldData)));
-        } else {
-            return UserMapper.toUserDto(userStorage.update(id, UserMapper.toUser(userDto)));
+        User user = userStorage.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователя с " + id + " не существует"));
+        if (userDto.getName() != null && !userDto.getName().isBlank()) {
+            user.setName(userDto.getName());
         }
+        if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
+            user.setEmail(userDto.getEmail());
+        }
+        return userMapper.toUserDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findById(Long id) {
-        return UserMapper.toUserDto(userStorage.findById(id));
+        return userMapper.toUserDto(userStorage.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователя с " + id + " не существует"))
+        );
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        userStorage.delete(id);
+        userStorage.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userStorage.findAll()
-                .stream().map(UserMapper::toUserDto)
+                .stream().map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 }
