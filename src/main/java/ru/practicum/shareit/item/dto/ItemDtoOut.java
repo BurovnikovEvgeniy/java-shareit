@@ -18,4 +18,5 @@ public class ItemDtoOut {
     private BookingDtoOut lastBooking;
     private List<CommentDtoOut> comments;
     private BookingDtoOut nextBooking;
+    private Long requestId;
 }

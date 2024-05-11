@@ -10,9 +10,9 @@ public interface ItemDtoService {
 
     ItemDtoOut findById(Long userId, Long itemId);
 
-    List<ItemDtoOut> findAllByUserId(Long userId);
+    List<ItemDtoOut> findAllByUserId(Long userId, Integer from, Integer size);
 
-    List<ItemDtoOut> search(Long userId, String text);
+    List<ItemDtoOut> search(Long userId, String text, Integer from, Integer size);
 
     CommentDtoOut createComment(Long userId, CommentDto commentDto, Long itemId);
 }
