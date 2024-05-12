@@ -29,6 +29,7 @@ import ru.practicum.shareit.user.dto.UserDtoService;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static ru.practicum.shareit.item.ItemMapper.itemMapper;
 import static ru.practicum.shareit.user.UserMapper.userMapper;
@@ -233,6 +235,30 @@ public class ItemDtoServiceImplTest {
         when(itemRepository.findAllByOwnerId(anyLong(), any(Pageable.class))).thenReturn(List.of(item));
 
         List<ItemDtoOut> actualItemsDto = itemService.findAllByUserId(1L, 0, 10);
+
+        assertEquals(1, actualItemsDto.size());
+        assertEquals(1, actualItemsDto.get(0).getId());
+        assertEquals("item name", actualItemsDto.get(0).getName());
+    }
+
+    @Test
+    void searchItemsByTextWithEmptySearchQuery() {
+        Page<Item> items = new PageImpl<>(List.of(item));
+        when(userService.findById(anyLong())).thenReturn(userMapper.toUserDto(user));
+
+        List<ItemDtoOut> actualItemsDto = itemService.search(user.getId(), "", 0, 1);
+
+        assertEquals(0, actualItemsDto.size());
+    }
+
+    @Test
+    void searchItemsByTextWithSearchQuery() {
+        List<Item> itemList = new ArrayList<>();
+        itemList.add(item);
+        when(userService.findById(anyLong())).thenReturn(userMapper.toUserDto(user));
+        when(itemRepository.search(anyString(), any())).thenReturn(itemList);
+
+        List<ItemDtoOut> actualItemsDto = itemService.search(user.getId(), "item name", 0, 1);
 
         assertEquals(1, actualItemsDto.size());
         assertEquals(1, actualItemsDto.get(0).getId());
