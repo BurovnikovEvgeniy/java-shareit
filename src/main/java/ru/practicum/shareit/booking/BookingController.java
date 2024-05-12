@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,7 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Slf4j
 @Validated
 public class BookingController {
     private static final String USER_HEADER = "X-Sharer-User-Id";
@@ -55,8 +54,7 @@ public class BookingController {
                                        @RequestParam(value = "state", defaultValue = "ALL") String bookingState,
                                        @Valid @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
                                        @Valid @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
-        log.info("GET запрос на получение списка всех бронирований текущего пользователя с id: {} и статусом {}", userId, bookingState);
-        return bookingService.findAll(userId, bookingState, from, size);
+        return bookingService.findAll(userId, bookingState, PageRequest.of(from / size, size));
     }
 
     @GetMapping("/owner")
@@ -64,7 +62,6 @@ public class BookingController {
                                            @RequestParam(value = "state", defaultValue = "ALL") String bookingState,
                                            @Valid @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
                                            @Valid @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
-        log.info("GET запрос на получение списка всех бронирований текущего владельца с id: {} и статусом {}", ownerId, bookingState);
-        return bookingService.findAllOwner(ownerId, bookingState, from, size);
+        return bookingService.findAllOwner(ownerId, bookingState, PageRequest.of(from / size, size));
     }
 }

@@ -74,8 +74,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
 
     @Override
     @Transactional
-    public List<BookingDtoOut> findAll(Long bookerId, String state, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from / size, size);
+    public List<BookingDtoOut> findAll(Long bookerId, String state, Pageable pageable) {
         userService.findById(bookerId);
         switch (validState(state)) {
             case ALL:
@@ -113,8 +112,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
 
     @Override
     @Transactional
-    public List<BookingDtoOut> findAllOwner(Long ownerId, String state, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from / size, size);
+    public List<BookingDtoOut> findAllOwner(Long ownerId, String state, Pageable pageable) {
         userService.findById(ownerId);
         switch (validState(state)) {
             case ALL:

@@ -2,7 +2,7 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.entity.EntityNotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -43,9 +43,9 @@ public class ItemRequestDtoServiceImpl implements ItemRequestDtoService {
     }
 
     @Override
-    public List<ItemRequestDtoOut> getAllRequests(Long userId, Integer from, Integer size) {
+    public List<ItemRequestDtoOut> getAllRequests(Long userId, Pageable pageable) {
         userMapper.toUser(userService.findById(userId));
-        List<ItemRequest> itemRequestList = requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(userId, PageRequest.of(from / size, size));
+        List<ItemRequest> itemRequestList = requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(userId, pageable);
         return itemRequestList.stream()
                 .map(itemRequestMapper::toRequestDtoOut)
                 .collect(Collectors.toList());

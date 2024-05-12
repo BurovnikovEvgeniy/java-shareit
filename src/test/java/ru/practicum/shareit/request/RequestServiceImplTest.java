@@ -95,7 +95,7 @@ class RequestServiceImplTest {
         when(requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of(request));
 
-        List<ItemRequestDtoOut> actualRequestsDto = requestService.getAllRequests(userDto.getId(), 0, 10);
+        List<ItemRequestDtoOut> actualRequestsDto = requestService.getAllRequests(userDto.getId(), PageRequest.of(0 / 10, 10));
 
         assertEquals(expectedRequestsDto, actualRequestsDto);
     }

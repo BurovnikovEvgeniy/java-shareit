@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -84,7 +85,7 @@ class ItemRequestControllerTest extends ShareItBaseControllerTests {
     void getAllRequests() throws Exception {
         Integer from = 0;
         Integer size = 10;
-        when(requestService.getAllRequests(user.getId(), from, size)).thenReturn(List.of(requestDto));
+        when(requestService.getAllRequests(user.getId(), PageRequest.of(from / size, size))).thenReturn(List.of(requestDto));
 
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests/all")
                         .characterEncoding(StandardCharsets.UTF_8)

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -88,7 +89,7 @@ public class BookingDtoServiceTest {
         assertEquals(BookingStatus.APPROVED, updatedBookingDto2.getStatus());
 
         List<BookingDtoOut> bookingsDtoOut = bookingService.findAllOwner(addedUser2.getId(),
-                BookingState.ALL.toString(), 0, 10);
+                BookingState.ALL.toString(), PageRequest.of(0, 10));
 
         assertEquals(2, bookingsDtoOut.size());
     }

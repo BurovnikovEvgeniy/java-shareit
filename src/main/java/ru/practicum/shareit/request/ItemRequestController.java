@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,7 @@ public class ItemRequestController {
     public List<ItemRequestDtoOut> getAllRequests(@RequestHeader(USER_HEADER) Long userId,
                                                   @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
                                                   @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
-        return requestService.getAllRequests(userId, from, size);
+        return requestService.getAllRequests(userId, PageRequest.of(from / size, size));
     }
 
     @GetMapping("/{requestId}")

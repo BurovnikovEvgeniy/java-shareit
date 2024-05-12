@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.ShareItBaseControllerTests;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -106,7 +107,6 @@ public class BookingControllerTest extends ShareItBaseControllerTests {
     void findAllBookingShouldReturnBadRequest() throws Exception {
         Integer from = -1;
         Integer size = 10;
-
         mockMvc.perform(get("/bookings")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -114,7 +114,7 @@ public class BookingControllerTest extends ShareItBaseControllerTests {
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isBadRequest());
 
-        verify(bookingService, never()).findAll(user.getId(), "ALL", from, size);
+        verify(bookingService, never()).findAll(user.getId(), "ALL", PageRequest.of(from / size, size));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class BookingControllerTest extends ShareItBaseControllerTests {
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isBadRequest());
 
-        verify(bookingService, never()).findAllOwner(user.getId(), "ALL", from, size);
+        verify(bookingService, never()).findAllOwner(user.getId(), "ALL", PageRequest.of(from / size, size));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class BookingControllerTest extends ShareItBaseControllerTests {
         Integer size = 10;
         String state = "ALL";
 
-        when(bookingService.findAll(user.getId(), BookingState.ALL.toString(), 0, 10))
+        when(bookingService.findAll(user.getId(), BookingState.ALL.toString(), PageRequest.of(from / size, size)))
                 .thenReturn(List.of(bookingDtoOut));
 
         String result = mockMvc.perform(get("/bookings")
@@ -195,7 +195,7 @@ public class BookingControllerTest extends ShareItBaseControllerTests {
         Integer size = 10;
         String state = "ALL";
 
-        when(bookingService.findAllOwner(user.getId(), BookingState.ALL.toString(), 0, 10))
+        when(bookingService.findAllOwner(user.getId(), BookingState.ALL.toString(), PageRequest.of(from / size, size)))
                 .thenReturn(List.of(bookingDtoOut));
 
         String result = mockMvc.perform(get("/bookings/owner")
