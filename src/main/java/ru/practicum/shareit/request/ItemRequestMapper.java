@@ -9,6 +9,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.item.ItemMapper.itemMapper;
@@ -25,7 +26,7 @@ public interface ItemRequestMapper {
     default ItemRequestDtoOut toRequestDtoOut(ItemRequest request) {
         List<ItemDtoOut> itemsDtoOut = new ArrayList<>();
 
-        if (!request.getItems().isEmpty()) {
+        if (Objects.nonNull(request.getItems())) {
             itemsDtoOut = request.getItems().stream()
                     .map(itemMapper::toItemDtoOut)
                     .collect(Collectors.toList());
