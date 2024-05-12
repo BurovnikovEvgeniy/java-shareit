@@ -40,14 +40,14 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDtoOut update(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
-                          @NotNull @RequestBody ItemDto itemDto,
-                          @PositiveOrZero @PathVariable Long itemId) {
+                             @NotNull @RequestBody ItemDto itemDto,
+                             @PositiveOrZero @PathVariable Long itemId) {
         return itemDtoService.update(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     public ItemDtoOut findById(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
-                            @PositiveOrZero @PathVariable("itemId") Long itemId) {
+                               @PositiveOrZero @PathVariable("itemId") Long itemId) {
         return itemDtoService.findById(userId, itemId);
     }
 

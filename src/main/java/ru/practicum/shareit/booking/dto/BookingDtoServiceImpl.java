@@ -153,7 +153,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
 
     private void bookingValidation(BookingDto bookingDto, User user, Item item) {
         if (!item.getAvailable()) {
-            throw new NotValidDataException("Вещь не доступена для бронирования.");
+            throw new NotValidDataException("Вещь не доступна для бронирования.");
         }
         if (Objects.equals(user.getId(), item.getOwner().getId())) {
             throw new EntityNotFoundException("Вещь не найдена.");

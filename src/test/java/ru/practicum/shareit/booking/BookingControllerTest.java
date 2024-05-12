@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.ShareItBaseTests;
+import ru.practicum.shareit.ShareItBaseControllerTests;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.dto.BookingDtoService;
@@ -30,7 +30,7 @@ import static ru.practicum.shareit.item.ItemMapper.itemMapper;
 import static ru.practicum.shareit.user.UserMapper.userMapper;
 
 @WebMvcTest(controllers = BookingController.class)
-public class BookingControllerTest extends ShareItBaseTests {
+public class BookingControllerTest extends ShareItBaseControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -2,17 +2,13 @@ package ru.practicum.shareit.request;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.item.ItemMapper.itemMapper;
