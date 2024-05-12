@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.shareit.ShareItBaseControllerTests;
@@ -53,7 +54,7 @@ class ItemRequestControllerTest extends ShareItBaseControllerTests {
         String result = mockMvc.perform(MockMvcRequestBuilders.post("/requests")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -69,7 +70,7 @@ class ItemRequestControllerTest extends ShareItBaseControllerTests {
 
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -87,7 +88,7 @@ class ItemRequestControllerTest extends ShareItBaseControllerTests {
 
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests/all")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -105,7 +106,7 @@ class ItemRequestControllerTest extends ShareItBaseControllerTests {
 
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests/{requestId}", requestId)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
