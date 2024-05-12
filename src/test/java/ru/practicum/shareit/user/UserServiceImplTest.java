@@ -16,8 +16,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -95,5 +97,20 @@ class UserServiceImplTest {
         long userId = 0L;
         userService.delete(userId);
         verify(userStorage, times(1)).deleteById(userId);
+    }
+
+    @Test
+    void checkExistUserInDB() {
+        long userId = 0L;
+        when(userStorage.existsById(userId)).thenReturn(true);
+        assertTrue(userService.isUserExist(userId));
+        verify(userStorage, times(1)).existsById(userId);
+    }
+
+    @Test
+    void checkNotExistUserInDB() {
+        long userId = 0L;
+        assertFalse(userService.isUserExist(userId));
+        verify(userStorage, times(1)).existsById(userId);
     }
 }

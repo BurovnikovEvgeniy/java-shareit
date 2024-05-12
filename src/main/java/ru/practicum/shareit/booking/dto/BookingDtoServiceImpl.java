@@ -74,7 +74,9 @@ public class BookingDtoServiceImpl implements BookingDtoService {
     @Override
     @Transactional
     public List<BookingDtoOut> findAll(Long bookerId, String state, Pageable pageable) {
-        userService.findById(bookerId);
+        if (!userService.isUserExist(bookerId)) {
+            throw new EntityNotFoundException("Пользователя с " + bookerId + " не существует");
+        }
         switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByBookerId(bookerId, pageable).stream()
@@ -112,7 +114,9 @@ public class BookingDtoServiceImpl implements BookingDtoService {
     @Override
     @Transactional
     public List<BookingDtoOut> findAllOwner(Long ownerId, String state, Pageable pageable) {
-        userService.findById(ownerId);
+        if (!userService.isUserExist(ownerId)) {
+            throw new EntityNotFoundException("Пользователя с " + ownerId + " не существует");
+        }
         switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByOwnerId(ownerId, pageable).stream()

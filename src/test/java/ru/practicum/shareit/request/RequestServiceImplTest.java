@@ -80,7 +80,7 @@ class RequestServiceImplTest {
     @Test
     void getUserRequests() {
         List<ItemRequestDtoOut> expectedRequestsDto = List.of(itemRequestMapper.toRequestDtoOut(request));
-        when(userService.findById(user.getId())).thenReturn(userDto);
+        when(userService.isUserExist(user.getId())).thenReturn(true);
         when(requestRepository.findAllByRequesterId(userDto.getId())).thenReturn(List.of(request));
 
         List<ItemRequestDtoOut> actualRequestsDto = requestService.getUserRequests(userDto.getId());
@@ -89,9 +89,17 @@ class RequestServiceImplTest {
     }
 
     @Test
+    void getUserRequestsWhenUserNotFoundThrowEntityNotFoundException() {
+        EntityNotFoundException requestNotFoundException = assertThrows(EntityNotFoundException.class,
+                () -> requestService.getUserRequests(userDto.getId()));
+
+        assertEquals("Пользователя с id=" + request.getId() + " не существует", requestNotFoundException.getMessage());
+    }
+
+    @Test
     void getAllRequests() {
         List<ItemRequestDtoOut> expectedRequestsDto = List.of(itemRequestMapper.toRequestDtoOut(request));
-        when(userService.findById(user.getId())).thenReturn(userDto);
+        when(userService.isUserExist(user.getId())).thenReturn(true);
         when(requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of(request));
 
@@ -101,9 +109,17 @@ class RequestServiceImplTest {
     }
 
     @Test
+    void getAllRequestsWhenUserNotFoundThrowEntityNotFoundException() {
+        EntityNotFoundException requestNotFoundException = assertThrows(EntityNotFoundException.class,
+                () -> requestService.getAllRequests(userDto.getId(), PageRequest.of(0 / 10, 10)));
+
+        assertEquals("Пользователя с id=" + request.getId() + " не существует", requestNotFoundException.getMessage());
+    }
+
+    @Test
     void getRequestById() {
         ItemRequestDtoOut expectedRequestDto = itemRequestMapper.toRequestDtoOut(request);
-        when(userService.findById(user.getId())).thenReturn(userDto);
+        when(userService.isUserExist(user.getId())).thenReturn(true);
         when(requestRepository.findById(request.getId())).thenReturn(Optional.of(request));
 
         ItemRequestDtoOut actualRequestDto = requestService.getRequestById(userDto.getId(), request.getId());
@@ -113,7 +129,7 @@ class RequestServiceImplTest {
 
     @Test
     void getRequestByIdWhenRequestIdIsNotValidShouldThrowObjectNotFoundException() {
-        when(userService.findById(user.getId())).thenReturn(userDto);
+        when(userService.isUserExist(user.getId())).thenReturn(true);
         when(requestRepository.findById(request.getId())).thenReturn(Optional.empty());
 
         EntityNotFoundException requestNotFoundException = assertThrows(EntityNotFoundException.class,
@@ -121,4 +137,13 @@ class RequestServiceImplTest {
 
         assertEquals(requestNotFoundException.getMessage(),"Запрос с id=" + request.getId() + " не был найден");
     }
+
+    @Test
+    void getRequestByIdWhenUserNotFoundThrowEntityNotFoundException() {
+        EntityNotFoundException requestNotFoundException = assertThrows(EntityNotFoundException.class,
+                () -> requestService.getRequestById(userDto.getId(), request.getId()));
+
+        assertEquals("Пользователя с id=" + request.getId() + " не существует", requestNotFoundException.getMessage());
+    }
+
 }

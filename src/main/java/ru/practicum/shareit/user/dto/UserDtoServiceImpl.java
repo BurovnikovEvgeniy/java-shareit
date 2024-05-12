@@ -62,4 +62,10 @@ public class UserDtoServiceImpl implements UserDtoService {
                 .stream().map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isUserExist(Long userId) {
+        return userStorage.existsById(userId);
+    }
 }

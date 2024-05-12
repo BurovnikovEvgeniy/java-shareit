@@ -35,7 +35,9 @@ public class ItemRequestDtoServiceImpl implements ItemRequestDtoService {
 
     @Override
     public List<ItemRequestDtoOut> getUserRequests(Long userId) {
-        userMapper.toUser(userService.findById(userId));
+        if (!userService.isUserExist(userId)) {
+            throw new EntityNotFoundException("Пользователя с id=" + userId + " не существует");
+        }
         List<ItemRequest> itemRequestList = requestRepository.findAllByRequesterId(userId);
         return itemRequestList.stream()
                 .map(itemRequestMapper::toRequestDtoOut)
@@ -44,7 +46,9 @@ public class ItemRequestDtoServiceImpl implements ItemRequestDtoService {
 
     @Override
     public List<ItemRequestDtoOut> getAllRequests(Long userId, Pageable pageable) {
-        userMapper.toUser(userService.findById(userId));
+        if (!userService.isUserExist(userId)) {
+            throw new EntityNotFoundException("Пользователя с id=" + userId + " не существует");
+        }
         List<ItemRequest> itemRequestList = requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(userId, pageable);
         return itemRequestList.stream()
                 .map(itemRequestMapper::toRequestDtoOut)
@@ -53,7 +57,9 @@ public class ItemRequestDtoServiceImpl implements ItemRequestDtoService {
 
     @Override
     public ItemRequestDtoOut getRequestById(Long userId, Long requestId) {
-        userService.findById(userId);
+        if (!userService.isUserExist(userId)) {
+            throw new EntityNotFoundException("Пользователя с id=" + userId + " не существует");
+        }
         Optional<ItemRequest> requestById = requestRepository.findById(requestId);
         if (requestById.isEmpty()) {
             throw new EntityNotFoundException("Запрос с id=" + requestId + " не был найден");
