@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
-import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -22,7 +21,4 @@ public interface BookingMapper {
     Booking toBooking(User user, Item item, BookingDto bookingDto);
 
     BookingDtoOut toBookingOut(Booking booking);
-
-    @Mapping(target = "bookerId", expression = "java(booking.getBooker().getId())")
-    BookingItemDto toBookingItemDto(Booking booking);
 }

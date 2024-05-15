@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.storage;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE b.booker_id = :user_id " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingsByBookerId(@Param("user_id") Long userId);
+    List<Booking> findAllBookingsByBookerId(@Param("user_id") Long userId, Pageable pageable);
 
 
     @Query(value = "SELECT b.* FROM bookings as b " +
@@ -25,14 +26,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE b.booker_id = :booker_id " +
             "AND :time BETWEEN b.start_date AND b.end_date " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllCurrentBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllCurrentBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE b.booker_id = :booker_id " +
             "AND b.end_date < :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllPastBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllPastBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
 
     @Query(value = "SELECT b.* FROM bookings as b " +
@@ -40,7 +41,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE b.booker_id = :booker_id " +
             "AND b.start_date > :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllFutureBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllFutureBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
@@ -48,41 +49,41 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.status = 'WAITING' " +
             "AND b.start_date > :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllWaitingBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllWaitingBookingsByBookerId(@Param("booker_id") Long bookerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE b.booker_id = :booker_id " +
             "AND b.status = 'REJECTED' " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllRejectedBookingsByBookerId(@Param("booker_id") Long bookerId);
+    List<Booking> findAllRejectedBookingsByBookerId(@Param("booker_id") Long bookerId, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id  " +
             "WHERE i.owner_id = ?1 " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingsByOwnerId(@Param("item_id") Long ownerId);
+    List<Booking> findAllBookingsByOwnerId(@Param("item_id") Long ownerId, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE i.owner_id = :owner_id " +
             "AND :time BETWEEN b.start_date AND b.end_date " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllCurrentBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllCurrentBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE i.owner_id = :owner_id " +
             "AND b.end_date < :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllPastBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllPastBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE i.owner_id = :owner_id " +
             "AND b.start_date > :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllFutureBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllFutureBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
@@ -90,14 +91,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.status = 'WAITING' " +
             "AND b.start_date > :time " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllWaitingBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime);
+    List<Booking> findAllWaitingBookingsByOwnerId(@Param("owner_id") Long ownerId, @Param("time") LocalDateTime currentTime, Pageable pageable);
 
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
             "WHERE i.owner_id = :owner_id " +
             "AND b.status = 'REJECTED' " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllRejectedBookingsByOwnerId(@Param("owner_id") Long ownerId);
+    List<Booking> findAllRejectedBookingsByOwnerId(@Param("owner_id") Long ownerId, Pageable pageable);
 
     @Query(value = "SELECT * FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +

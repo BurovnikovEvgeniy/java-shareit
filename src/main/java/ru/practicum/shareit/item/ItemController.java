@@ -18,13 +18,11 @@ import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.dto.ItemDtoService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RequiredArgsConstructor
 @RestController
 @Validated
@@ -42,26 +40,30 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDtoOut update(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
-                          @NotNull @RequestBody ItemDto itemDto,
-                          @PositiveOrZero @PathVariable Long itemId) {
+                             @NotNull @RequestBody ItemDto itemDto,
+                             @PositiveOrZero @PathVariable Long itemId) {
         return itemDtoService.update(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     public ItemDtoOut findById(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
-                            @PositiveOrZero @PathVariable("itemId") Long itemId) {
+                               @PositiveOrZero @PathVariable("itemId") Long itemId) {
         return itemDtoService.findById(userId, itemId);
     }
 
     @GetMapping
-    public List<ItemDtoOut> findAllByUserId(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId) {
-        return itemDtoService.findAllByUserId(userId);
+    public List<ItemDtoOut> findAllByUserId(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
+                                            @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                            @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+        return itemDtoService.findAllByUserId(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDtoOut> search(@PositiveOrZero @RequestHeader(USER_HEADER) Long userId,
-                                @RequestParam(name = "text") String text) {
-        return itemDtoService.search(userId, text);
+                                   @RequestParam(name = "text") String text,
+                                   @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                   @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+        return itemDtoService.search(userId, text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

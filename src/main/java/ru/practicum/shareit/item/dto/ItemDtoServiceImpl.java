@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserDtoService;
 import ru.practicum.shareit.user.model.User;
@@ -44,6 +47,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     private final UserDtoService userDtoService;
     private final CommentRepository commentStorage;
     private final BookingRepository bookingStorage;
+    private final ItemRequestRepository itemRequestStorage;
 
     @Override
     @Transactional
@@ -51,6 +55,9 @@ public class ItemDtoServiceImpl implements ItemDtoService {
         UserDto user = userDtoService.findById(userId);
         Item item = itemMapper.toItem(itemDto);
         item.setOwner((userMapper.toUser(user)));
+        if (itemDto.getRequestId() != null) {
+            item.setRequest(itemRequestStorage.getReferenceById(itemDto.getRequestId()));
+        }
         return itemMapper.toItemDtoOut(itemStorage.save(item));
     }
 
@@ -98,9 +105,10 @@ public class ItemDtoServiceImpl implements ItemDtoService {
     }
 
     @Override
-    public List<ItemDtoOut> findAllByUserId(Long userId) {
+    public List<ItemDtoOut> findAllByUserId(Long userId, Integer from, Integer size) {
         userDtoService.findById(userId);
-        List<Item> itemList = itemStorage.findAllByOwnerId(userId);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Item> itemList = itemStorage.findAllByOwnerId(userId, pageable);
         List<Long> idList = itemList.stream()
                 .map(Item::getId)
                 .collect(Collectors.toList());
@@ -125,12 +133,13 @@ public class ItemDtoServiceImpl implements ItemDtoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDtoOut> search(Long userId, String text) {
+    public List<ItemDtoOut> search(Long userId, String text, Integer from, Integer size) {
         userDtoService.findById(userId);
+        Pageable pageable = PageRequest.of(from / size, size);
         if (text == null || text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemStorage.search(text)
+        return itemStorage.search(text, pageable)
                 .stream().map(itemMapper::toItemDtoOut)
                 .collect(toList());
     }

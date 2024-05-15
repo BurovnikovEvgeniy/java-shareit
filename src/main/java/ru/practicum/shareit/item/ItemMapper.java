@@ -16,10 +16,12 @@ public interface ItemMapper {
 
     ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
+    @Mapping(target = "requestId", expression = "java(item.getRequest() != null ? item.getRequest().getId() : null)")
     ItemDto toItemDto(Item item);
 
     Item toItem(ItemDto itemDto);
 
+    @Mapping(target = "requestId", expression = "java(item.getRequest() != null ? item.getRequest().getId() : null)")
     ItemDtoOut toItemDtoOut(Item item);
 
     @Mapping(target = "id", expression = "java(item.getId())")
