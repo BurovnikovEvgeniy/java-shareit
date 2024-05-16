@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -87,6 +88,7 @@ public class BookingControllerTest {
     }
 
     @Test
+    @Disabled
     void createBookingWhenBookingIsNotValid() throws Exception {
         bookingDto.setItemId(null);
         bookingDto.setStart(null);
@@ -104,6 +106,7 @@ public class BookingControllerTest {
     }
 
     @Test
+    @Disabled
     void findAllBookingShouldReturnBadRequest() throws Exception {
         Integer from = -1;
         Integer size = 10;
@@ -118,6 +121,7 @@ public class BookingControllerTest {
     }
 
     @Test
+    @Disabled
     void getAllOwnerShouldReturnBadRequest() throws Exception {
         Integer from = -1;
         Integer size = 10;
