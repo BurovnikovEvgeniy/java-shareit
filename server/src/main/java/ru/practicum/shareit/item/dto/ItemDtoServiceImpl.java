@@ -25,6 +25,8 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -121,7 +123,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
                 .stream()
                 .map(bookingMapper::toBookingOut)
                 .collect(groupingBy(BookingDtoOut::getItemId, toList()));
-        itemList.sort((o1, o2) -> Math.toIntExact(o1.getId() - o2.getId()));
+        itemList.sort((lhs, rhs) -> rhs.getId().compareTo(lhs.getId()));
         return itemList.stream()
                 .map(item -> itemMapper.toItemDtoOut(
                         item,
