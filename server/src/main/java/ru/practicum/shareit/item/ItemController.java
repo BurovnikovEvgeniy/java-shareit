@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import static ru.practicum.shareit.utils.Constants.USER_HEADER;
 
 @RequiredArgsConstructor
 @RestController
-@Validated
 @RequestMapping("/items")
 public class ItemController {
 

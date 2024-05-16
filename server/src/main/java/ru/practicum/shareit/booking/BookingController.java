@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import static ru.practicum.shareit.utils.Constants.USER_HEADER;
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Validated
 public class BookingController {
 
     private final BookingDtoService bookingService;
@@ -36,16 +34,14 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDtoOut updateStatus(@RequestHeader(USER_HEADER) Long userId,
-                                      @PathVariable("bookingId")
-                                      Long bookingId,
+                                      @PathVariable("bookingId") Long bookingId,
                                       @RequestParam(name = "approved") Boolean approved) {
         return bookingService.update(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDtoOut findBookingById(@RequestHeader(USER_HEADER) Long userId,
-                                         @PathVariable("bookingId")
-                                         Long bookingId) {
+                                         @PathVariable("bookingId") Long bookingId) {
         return bookingService.findBookingByUserId(userId, bookingId);
     }
 

@@ -3,7 +3,6 @@ package ru.practicum.shareit.request;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ import static ru.practicum.shareit.utils.Constants.USER_HEADER;
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class ItemRequestController {
 
     private final ItemRequestDtoService requestService;

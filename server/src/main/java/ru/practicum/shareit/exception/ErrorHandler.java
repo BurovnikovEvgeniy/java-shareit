@@ -10,7 +10,6 @@ import ru.practicum.shareit.exception.entity.EntityNotFoundException;
 import ru.practicum.shareit.exception.entity.NotValidDataException;
 import ru.practicum.shareit.exception.entity.UnsupportedStatusException;
 
-import javax.validation.ValidationException;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -26,13 +25,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleNotValidDataException(final NotValidDataException e) {
-        return Map.of("message", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidationException(final ValidationException e) {
-        log.error("Произошла ошибка валидации параметров");
         return Map.of("message", e.getMessage());
     }
 
