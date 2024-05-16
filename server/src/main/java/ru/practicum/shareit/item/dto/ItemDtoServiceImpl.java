@@ -128,8 +128,8 @@ public class ItemDtoServiceImpl implements ItemDtoService {
                         item,
                         getLastBooking(bookings.get(item.getId()), LocalDateTime.now()),
                         comments.get(item.getId()),
-                        getNextBooking(bookings.get(item.getId()), LocalDateTime.now())
-                )).sorted(Comparator.comparing(ItemDtoOut::getId))
+                        getNextBooking(bookings.get(item.getId()), LocalDateTime.now())))
+                .sorted(Comparator.comparing(ItemDtoOut::getId))
                 .collect(toList());
     }
 
