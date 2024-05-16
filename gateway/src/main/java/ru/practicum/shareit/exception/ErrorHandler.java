@@ -54,7 +54,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleOtherException(final Throwable e) {
-        log.error("INTERNAL_SERVER_ERROR");
+        log.error("INTERNAL_SERVER_ERROR, обработчик Throwable gateway");
         return Map.of("message", e.getMessage());
     }
 }
