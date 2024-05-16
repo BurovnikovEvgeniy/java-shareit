@@ -20,6 +20,9 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
 
   db:
     # образ, из которого должен быть запущен контейнер
@@ -33,5 +36,5 @@ services:
     # переменные окружения
     environment:
       - POSTGRES_DB=shareit
-      - POSTGRES_USER=shareit
-      - POSTGRES_PASSWORD=shareit
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
