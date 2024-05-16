@@ -33,5 +33,5 @@ services:
     # переменные окружения
     environment:
       - POSTGRES_DB=shareit
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=shareit
+      - POSTGRES_PASSWORD=shareit
