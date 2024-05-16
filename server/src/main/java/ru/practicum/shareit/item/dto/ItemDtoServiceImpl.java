@@ -121,6 +121,7 @@ public class ItemDtoServiceImpl implements ItemDtoService {
                 .stream()
                 .map(bookingMapper::toBookingOut)
                 .collect(groupingBy(BookingDtoOut::getItemId, toList()));
+        itemList.sort((o1, o2) -> Math.toIntExact(o1.getId() - o2.getId()));
         return itemList.stream()
                 .map(item -> itemMapper.toItemDtoOut(
                         item,
