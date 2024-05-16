@@ -107,7 +107,7 @@ public class BookingDtoServiceImpl implements BookingDtoService {
                         .map(bookingMapper::toBookingOut)
                         .collect(Collectors.toList());
             default:
-                throw new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS");
+                throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 

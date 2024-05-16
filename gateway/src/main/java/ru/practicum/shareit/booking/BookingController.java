@@ -63,7 +63,7 @@ public class BookingController {
 											  @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
 											  @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
 		BookingState state = BookingState.from(bookingState)
-				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + bookingState));
+				.orElseThrow(() -> new UnsupportedStatusException("Unknown state: " + bookingState));
 		log.info("GET запрос на получение списка всех бронирований c state {}, userId={}, from={}, size={}", bookingState, ownerId, from, size);
 		return bookingClient.getAllOwner(ownerId, state, from, size);
 	}
